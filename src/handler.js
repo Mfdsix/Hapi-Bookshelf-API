@@ -8,12 +8,28 @@ const getAllBooksHandler = (_, h) => {
             books
         }
     } catch (err) {
+        console.log(err)
         return h.responseError("Buku gagal didapatkan")
             .code(500)
     }
 }
 
-const getSpecificBookHandler = (req, h) => { }
+const getSpecificBookHandler = (req, h) => {
+    try {
+        const { id } = req.params
+        const book = books.filter((item) => item.id == id)
+
+        if (book)
+            return h.response({ book })
+        else
+            return h.responseError("Buku tidak ditemukan")
+                .code(404)
+    } catch (err) {
+        console.error(err)
+        return h.response(responseError("Buku gagal didapatkan"))
+            .code(500)
+    }
+}
 
 const createBookHandler = (req, h) => {
     try {
