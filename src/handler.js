@@ -17,7 +17,7 @@ const getAllBooksHandler = (_, h) => {
 const getSpecificBookHandler = (req, h) => {
     try {
         const { id } = req.params
-        const book = books.filter((item) => item.id == id)
+        const book = books.filter((item) => item.id === id)
 
         if (book)
             return h.response({ book })
@@ -44,53 +44,9 @@ const createBookHandler = (req, h) => {
             reading
         } = req.payload
 
-        // mandatory validation
-        if (!name)
-            return h.response(responseError("Gagal menambahkan buku. Mohon isi nama buku"))
-                .code(400)
-        if (!year)
-            return h.response(responseError("Gagal menambahkan buku. Mohon isi tahun terbit buku"))
-                .code(400)
-        if (!author)
-            return h.response(responseError("Gagal menambahkan buku. Mohon isi penulis buku"))
-                .code(400)
-        if (!summary)
-            return h.response(responseError("Gagal menambahkan buku. Mohon isi ringkasan buku"))
-                .code(400)
-        if (!publisher)
-            return h.response(responseError("Gagal menambahkan buku. Mohon isi penerbit buku"))
-                .code(400)
-        if (!pageCount)
-            return h.response(responseError("Gagal menambahkan buku. Mohon isi jumlah halaman buku"))
-                .code(400)
-        if (!readPage)
-            return h.response(responseError("Gagal menambahkan buku. Mohon isi jumlah halaman yang sudah dibaca"))
-                .code(400)
-        if (reading !== false || reading !== true)
-            return h.response(responseError("Gagal menambahkan buku. Mohon isi status membaca"))
-                .code(400)
-
-        // advance validation
-        if (typeof (year) !== 'number')
-            return h.response(responseError("Gagal menambahkan buku. Tahun terbit harus berisi angka"))
-                .code(400)
-        if (typeof (pageCount) !== 'number')
-            return h.response(responseError("Gagal menambahkan buku. Jumlah Halaman harus berisi angka"))
-                .code(400)
-        if (typeof (readPage) !== 'number')
-            return h.response(responseError("Gagal menambahkan buku. Jumlah Halaman yang dibaca harus berisi angka"))
-                .code(400)
-        if (year.toString().length < 4)
-            return h.response(responseError("Gagal menambahkan buku. Tahun terbit tidak valid"))
-                .code(400)
-        if (pageCount < 0)
-            return h.response(responseError("Gagal menambahkan buku. Jumlah Halaman tidak valid"))
-                .code(400)
-        if (readPage < 0)
-            return h.response(responseError("Gagal menambahkan buku. Jumlah Halaman yang dibaca tidak valid"))
-                .code(400)
-        if (readPage > pageCount)
-            return h.response(responseError("Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount"))
+        const validationError = validateBookPayload(req.payload)
+        if (!validationError)
+            return h.response(responseError(validationError))
                 .code(400)
 
         // processing additional datas and adding new book
@@ -126,9 +82,70 @@ const createBookHandler = (req, h) => {
     }
 }
 
-const updateBookHandler = (req, h) => { }
+const updateBookHandler = (req, h) => {
+    try {
+        const { id } = req.params
+        const book = books.filter((item) => item.id === id)
+
+        if (book) {
+
+        } else
+            return h.response(responseError("Gagal memperbarui buku. Id tidak ditemukan"))
+    } catch (err) {
+        console.log(err)
+        return h.response(responseError("Buku gagal diedit"))
+            .code(500)
+    }
+}
 
 const deleteBookHandler = (req, h) => { }
+
+const validateBookPayload = ({
+    name,
+    year,
+    author,
+    summary,
+    publisher,
+    pageCount,
+    readPage,
+    reading
+}) => {
+    // mandatory validation
+    if (!name)
+        return "Gagal menambahkan buku. Mohon isi nama buku"
+    if (!year)
+        return "Gagal menambahkan buku. Mohon isi tahun terbit buku"
+    if (!author)
+        return "Gagal menambahkan buku. Mohon isi penulis buku"
+    if (!summary)
+        return "Gagal menambahkan buku. Mohon isi ringkasan buku"
+    if (!publisher)
+        return "Gagal menambahkan buku. Mohon isi penerbit buku"
+    if (!pageCount)
+        return "Gagal menambahkan buku. Mohon isi jumlah halaman buku"
+    if (!readPage)
+        return "Gagal menambahkan buku. Mohon isi jumlah halaman yang sudah dibaca"
+    if (reading !== false || reading !== true)
+        return "Gagal menambahkan buku. Mohon isi status membaca"
+
+    // advance validation
+    if (typeof (year) !== 'number')
+        return "Gagal menambahkan buku. Tahun terbit harus berisi angka"
+    if (typeof (pageCount) !== 'number')
+        return "Gagal menambahkan buku. Jumlah Halaman harus berisi angka"
+    if (typeof (readPage) !== 'number')
+        return "Gagal menambahkan buku. Jumlah Halaman yang dibaca harus berisi angka"
+    if (year.toString().length < 4)
+        return "Gagal menambahkan buku. Tahun terbit tidak valid"
+    if (pageCount < 0)
+        return "Gagal menambahkan buku. Jumlah Halaman tidak valid"
+    if (readPage < 0)
+        return "Gagal menambahkan buku. Jumlah Halaman yang dibaca tidak valid"
+    if (readPage > pageCount)
+        return "Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount"
+
+    return null
+}
 
 module.exports = {
     getAllBooksHandler,
