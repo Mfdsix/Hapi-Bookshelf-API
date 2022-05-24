@@ -17,7 +17,7 @@ const getAllBooksHandler = (_, h) => {
 const getSpecificBookHandler = (req, h) => {
     try {
         const { id } = req.params
-        const book = books.filter((item) => item.id === id)
+        const book = books.filter((item) => item.id === id)[0]
 
         if (book)
             return h.response({ book })
@@ -85,12 +85,38 @@ const createBookHandler = (req, h) => {
 const updateBookHandler = (req, h) => {
     try {
         const { id } = req.params
-        const book = books.filter((item) => item.id === id)
+        const {
+            name,
+            year,
+            author,
+            summary,
+            publisher,
+            pageCount,
+            readPage,
+            reading
+        } = req.payload
 
-        if (book) {
+        const validationError = validateBookPayload(req.payload)
+        if (!validationError)
+            return h.response(responseError(validationError))
+                .code(400)
 
+        const bookIndex = books.filter((item) => item.id === id)
+        if (bookIndex !== -1) {
+            books[bookIndex] = {
+                ...books[bookIndex],
+                name,
+                year,
+                author,
+                summary,
+                publisher,
+                pageCount,
+                readPage,
+                reading
+            }
         } else
             return h.response(responseError("Gagal memperbarui buku. Id tidak ditemukan"))
+                .code(404)
     } catch (err) {
         console.log(err)
         return h.response(responseError("Buku gagal diedit"))
