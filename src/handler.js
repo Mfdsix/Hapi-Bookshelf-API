@@ -2,11 +2,23 @@ const { nanoid } = require('nanoid')
 const books = require('./books')
 const { responseSuccess, responseError } = require('./response')
 
-const getAllBooksHandler = (_, h) => {
+const getAllBooksHandler = (req, h) => {
     try {
-        return {
-            books
-        }
+        const {
+            name,
+            reading,
+            finished
+        } = req.query
+
+        const filteredBooks = books.filter((book) => {
+            return (name ? (book.name.toLowerCase().includes(name.toLowerCase())) : true)
+                && ([0, 1].includes(reading) ? book.reading === (reading === 1) : true)
+                && ([0, 1].includes(finished) ? book.finished === (finished === 1) : true)
+        })
+
+        return h.response(responseSuccess({
+            books: filteredBooks
+        }))
     } catch (err) {
         console.log(err)
         return h.responseError("Buku gagal didapatkan")
