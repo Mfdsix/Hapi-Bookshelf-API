@@ -101,7 +101,9 @@ const updateBookHandler = (req, h) => {
             return h.response(responseError(validationError))
                 .code(400)
 
-        const bookIndex = books.filter((item) => item.id === id)
+        const bookIndex = books.findIndex((item) => item.id === id)
+        const updatedAt = new Date().toISOString()
+
         if (bookIndex !== -1) {
             books[bookIndex] = {
                 ...books[bookIndex],
@@ -112,8 +114,10 @@ const updateBookHandler = (req, h) => {
                 publisher,
                 pageCount,
                 readPage,
-                reading
+                reading,
+                updatedAt
             }
+            return h.response(responseSuccess("Buku berhasil diperbarui"))
         } else
             return h.response(responseError("Gagal memperbarui buku. Id tidak ditemukan"))
                 .code(404)
@@ -124,7 +128,23 @@ const updateBookHandler = (req, h) => {
     }
 }
 
-const deleteBookHandler = (req, h) => { }
+const deleteBookHandler = (req, h) => {
+    try {
+        const { id } = req.params
+        const bookIndex = books.findIndex((item) => item.id === id)
+
+        if (bookIndex !== -1) {
+            books.splice(bookIndex, 1)
+            return h.response(responseSuccess("Buku berhasil dihapus"))
+        } else
+            return h.response(responseError("Buku gagal dihapus. Id tidak ditemukan"))
+                .code(404)
+    } catch (err) {
+        console.log(err)
+        return h.response(responseError("Buku gagal dihapus"))
+            .code(500)
+    }
+}
 
 const validateBookPayload = ({
     name,
