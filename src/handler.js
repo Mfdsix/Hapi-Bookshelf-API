@@ -2,7 +2,7 @@ const { nanoid } = require('nanoid')
 const books = require('./books')
 const { responseSuccess, responseError } = require('./response')
 
-const getAllBooksHandler = (req, h) => {
+const getBooksHandler = (req, h) => {
 	try {
 		const {
 			name,
@@ -38,7 +38,7 @@ const getAllBooksHandler = (req, h) => {
 	}
 }
 
-const getSpecificBookHandler = (req, h) => {
+const getBookByIdHandler = (req, h) => {
 	try {
 		const { id } = req.params
 		const book = books.filter((item) => item.id === id)[0]
@@ -219,8 +219,8 @@ const validateBookPayload = ({
 }
 
 module.exports = {
-	getAllBooksHandler,
-	getSpecificBookHandler,
+	getBooksHandler,
+	getBookByIdHandler,
 	createBookHandler,
 	updateBookHandler,
 	deleteBookHandler
