@@ -11,17 +11,9 @@ const getBooksHandler = (req, h) => {
 			finished
 		} = req.query
 
-		// filtering properties to be returned
 		let filteredBooks = books
-			.map((book) => {
-				return {
-					id: book.id,
-					name: book.name,
-					publisher: book.publisher
-				}
-			})
 
-		// applied additional filters
+		// applying additional filters
 		if (name)
 			filteredBooks = filteredBooks
 				.filter((book) => {
@@ -39,7 +31,13 @@ const getBooksHandler = (req, h) => {
 				})
 
 		return h.response(respSuccess({
-			books: filteredBooks
+			books: filteredBooks.map((book) => {
+				return {
+					id: book.id,
+					name: book.name,
+					publisher: book.publisher
+				}
+			})
 		}))
 	} catch (err) {
 		console.log(err)
