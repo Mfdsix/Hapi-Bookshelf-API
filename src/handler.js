@@ -19,10 +19,10 @@ const getBooksHandler = (req, h) => {
         .filter((book) => (book.name.toLowerCase().includes(name.toLowerCase())))
     }
     if (reading) {
-      filteredBooks = filteredBooks.filter((book) => book.reading === (reading === 1))
+      filteredBooks = filteredBooks.filter((book) => book.reading === (reading.toString() === '1'))
     }
     if (finished) {
-      filteredBooks = filteredBooks.filter((book) => book.finished === (finished === 1))
+      filteredBooks = filteredBooks.filter((book) => book.finished === (finished.toString() === '1'))
     }
 
     return h.response(respSuccess({
