@@ -1,4 +1,4 @@
-const responseSuccess = (data, message = 'Success') => {
+const respSuccess = (data, message = 'Success') => {
 	return {
 		status: 'success',
 		message: message,
@@ -6,7 +6,7 @@ const responseSuccess = (data, message = 'Success') => {
 	}
 }
 
-const responseError = (message = 'Error') => {
+const respError = (message = 'Error') => {
 	return {
 		status: 'fail',
 		message: message,
@@ -14,6 +14,6 @@ const responseError = (message = 'Error') => {
 }
 
 module.exports = {
-	responseSuccess,
-	responseError
+	respSuccess,
+	respError
 }
