@@ -1,19 +1,19 @@
 const respSuccess = (data, message = 'Success') => {
-	return {
-		status: 'success',
-		message: message,
-		data: data
-	}
+  return {
+    status: 'success',
+    message,
+    data
+  }
 }
 
 const respError = (message = 'Error') => {
-	return {
-		status: 'fail',
-		message: message,
-	}
+  return {
+    status: 'fail',
+    message
+  }
 }
 
 module.exports = {
-	respSuccess,
-	respError
+  respSuccess,
+  respError
 }
